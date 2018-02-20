@@ -2,6 +2,8 @@ import numpy as np
 import cv2
 import consts as imgs
 import matplotlib.pyplot as plt
+from sklearn.svm import LinearSVC
+
 
 test_matrix = np.array([[1, 4, 6], [9, 7, 1], [5, 7, 9]])
 
@@ -71,5 +73,21 @@ def get_neighbours_indexes(clockwise=True, scale=1):
 #     y, x = np.ogrid[-a:n - a, -b:n - b]
 #     mask = x * x + y * y <= r * r
 
-res = start_3_by_3(imgs.TEST)
-plt.imshow(res,"gray"), plt.show()
+# res = start_3_by_3(imgs.TEST)
+
+data = []
+labels = []
+
+for img_path in imgs.get_training_imgs():
+    img_res = start_3_by_3(img_path)
+
+    labels.append(img_path.split('/')[-2])
+
+    hist, _ = np.histogram(img_res, 255)
+    hist = hist / np.sum(hist)
+    data.append(hist)
+
+for img_path in imgs.TEST:
+    
+
+model = LinearSVC(C=100.0)
