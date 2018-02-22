@@ -9,8 +9,14 @@ from os import listdir
 def get_training_imgs():
     res = []
     for dirs in listdir("./imgs/training"):
-        res.extend([dirs + "/" + filename for filename in listdir("./imgs/training/" + dirs)])
+        res.extend(['./imgs/training/' + dirs + "/" + filename for filename in listdir("./imgs/training/" + dirs)])
     return res
+
+def get_training_test_imgs():
+    res = []
+    for dirs in listdir("./imgs/training"):
+        res.extend(['./imgs/training/' + dirs + "/" + filename for filename in listdir("./imgs/training/" + dirs)])
+    return res[0:2]
 
 def get_testing_imgs():
     return listdir("./imgs/testing")

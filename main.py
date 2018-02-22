@@ -9,7 +9,6 @@ test_matrix = np.array([[1, 4, 6], [9, 7, 1], [5, 7, 9]])
 
 test_matrix2 = np.array([[5, 4, 2, 2, 1], [3, 5, 8, 1, 3], [2, 5, 4, 1, 2], [4, 3, 7, 2, 7], [1, 4, 4, 2, 6]])
 
-print(test_matrix2)
 def start_3_by_3(filename):
     img = cv2.imread(filename)
     img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -17,21 +16,19 @@ def start_3_by_3(filename):
 
     new_height = height - 2
     new_width = width - 2
-    print("img1 shape")
+    print(filename, "shape")
     print("height:", height, "| width:", width)
     print("new_height:", new_height, "| new_width:", new_width)
 
-    new_matrix = np.zeros(shape=(new_height, new_width))
+    new_matrix = np.zeros(shape=(new_width, new_height))
 
-    for x in range(new_width):
-        x += 1
-        for y in range(new_height):
-            y += 1
-
-            center = (x, y)
+    for y in range(new_height):
+        y += 1
+        for x in range(new_width):
+            x += 1
+            center = (y, x)
             indexes = get_subwindow_indexes(center)
             res = int(compare_neighbours(center, img, indexes), 2)
-
             new_matrix[x - 1, y - 1] = res
 
     return new_matrix
@@ -43,6 +40,7 @@ def compare_neighbours(center, image, indexes):
 
     res = ""
 
+    print(indexes)
     for index in indexes:
         # get neighbour pixel
         n_pixel = image.item(index)
@@ -78,16 +76,26 @@ def get_neighbours_indexes(clockwise=True, scale=1):
 data = []
 labels = []
 
-for img_path in imgs.get_training_imgs():
+for img_path in imgs.get_training_test_imgs():
     img_res = start_3_by_3(img_path)
 
     labels.append(img_path.split('/')[-2])
 
-    hist, _ = np.histogram(img_res, 255)
+    hist = np.histogram(img_res, 255)[0]
     hist = hist / np.sum(hist)
     data.append(hist)
 
-for img_path in imgs.TEST:
-    
-
 model = LinearSVC(C=100.0)
+model.fit(data, labels)
+
+for img_path in imgs.get_testing_imgs():
+    img_res = start_3_by_3(img_path)
+
+    hist = np.histogram(img_res, 255)[0]
+    prediction = model.predict(hist)[0]
+
+    # display the image and the prediction
+    cv2.putText(img_res, prediction, (10, 30), cv2.FONT_HERSHEY_SIMPLEX,
+                1.0, (0, 0, 255), 3)
+    cv2.imshow("Image", img_res)
+    cv2.waitKey(0)
