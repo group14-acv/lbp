@@ -16,7 +16,7 @@ def get_training_test_imgs():
     res = []
     for dirs in listdir("./imgs/training"):
         res.extend(['./imgs/training/' + dirs + "/" + filename for filename in listdir("./imgs/training/" + dirs)])
-    return res[0:2]
+    return res[0:2] + res[-3:-1]
 
 def get_testing_imgs():
-    return listdir("./imgs/testing")
+    return ['./imgs/testing/' + x for x in listdir("./imgs/testing")]

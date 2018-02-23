@@ -16,9 +16,9 @@ def start_3_by_3(filename):
 
     new_height = height - 2
     new_width = width - 2
-    print(filename, "shape")
-    print("height:", height, "| width:", width)
-    print("new_height:", new_height, "| new_width:", new_width)
+   # print(filename, "shape")
+   # print("height:", height, "| width:", width)
+   # print("new_height:", new_height, "| new_width:", new_width)
 
     new_matrix = np.zeros(shape=(new_width, new_height))
 
@@ -40,7 +40,7 @@ def compare_neighbours(center, image, indexes):
 
     res = ""
 
-    print(indexes)
+  #  print(indexes)
     for index in indexes:
         # get neighbour pixel
         n_pixel = image.item(index)
@@ -69,19 +69,19 @@ def get_neighbours_indexes(clockwise=True, scale=1):
 
 # def get_mask(a, b, n, r=1):
 #     y, x = np.ogrid[-a:n - a, -b:n - b]
-#     mask = x * x + y * y <= r * r
+#     mask = x * x + y * y <= r * roo
 
 # res = start_3_by_3(imgs.TEST)
 
 data = []
 labels = []
 
-for img_path in imgs.get_training_test_imgs():
+for img_path in imgs.get_training_imgs():
     img_res = start_3_by_3(img_path)
 
     labels.append(img_path.split('/')[-2])
 
-    hist = np.histogram(img_res, 255)[0]
+    (hist, _) = np.histogram(img_res, np.arange(0, 255))
     hist = hist / np.sum(hist)
     data.append(hist)
 
@@ -89,13 +89,24 @@ model = LinearSVC(C=100.0)
 model.fit(data, labels)
 
 for img_path in imgs.get_testing_imgs():
+    print(img_path)
     img_res = start_3_by_3(img_path)
 
-    hist = np.histogram(img_res, 255)[0]
-    prediction = model.predict(hist)[0]
+    (hist,_) = np.histogram(img_res, np.arange(0, 255))
+    hist = hist / np.sum(hist)
+    print(hist)
 
+    hist = hist.reshape(1, -1)
+
+    from time import sleep
+    sleep(1)
+    prediction = model.predict(hist)
+
+    prediction = prediction[0]
+
+    img = cv2.imread('./imgs/testing/MVIMG_20180222_174755.jpg')
     # display the image and the prediction
-    cv2.putText(img_res, prediction, (10, 30), cv2.FONT_HERSHEY_SIMPLEX,
+    cv2.putText(img, prediction, (10, 30), cv2.FONT_HERSHEY_SIMPLEX,
                 1.0, (0, 0, 255), 3)
-    cv2.imshow("Image", img_res)
+    cv2.imshow("Image", img)
     cv2.waitKey(0)
