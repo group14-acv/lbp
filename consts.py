@@ -3,9 +3,11 @@ HUMAN_SKIN = "imgs/human_skin.jpg"
 TEST = "imgs/test.png"
 CARPET_TRAIN = ["imgs/carpet_training/img1.png", "imgs/carpet_training/img2.png", "imgs/carpet_training/img3.png", "imgs/carpet_training/img4.png"]
 CARPET_TEST = ["imgs/carpet_testing/img1.png", "imgs/carpet_testing/img2.png", "imgs/carpet_testing/img3.png", "imgs/carpet_testing/img4.png"]
+PICKLE_FILE = "svm_model.pkl"
 
 from os import listdir
 
+# get functions used for retrieving filenames
 def get_training_imgs():
     res = []
     for dirs in listdir("./imgs/training"):
@@ -20,3 +22,17 @@ def get_training_test_imgs():
 
 def get_testing_imgs():
     return ['./imgs/testing/' + x for x in listdir("./imgs/testing")]
+
+# pickle functions used for saving and loading support vector machine models to save time
+def pickle_save(model):
+    import pickle
+
+    output = open(PICKLE_FILE, 'wb')
+    pickle.dump(model, output)
+
+
+def pickle_load():
+    import pickle
+
+    pkl_file = open(PICKLE_FILE, 'rb')
+    return pickle.load(pkl_file)
