@@ -1,11 +1,12 @@
+from os import listdir
+
 ELEPHANT_SKIN = "imgs/elephant_skin.jpg"
 HUMAN_SKIN = "imgs/human_skin.jpg"
-TEST = "imgs/test.png"
+TEST = "./imgs/test.jpg"
 CARPET_TRAIN = ["imgs/carpet_training/img1.png", "imgs/carpet_training/img2.png", "imgs/carpet_training/img3.png", "imgs/carpet_training/img4.png"]
-CARPET_TEST = ["imgs/carpet_testing/img1.png", "imgs/carpet_testing/img2.png", "imgs/carpet_testing/img3.png", "imgs/carpet_testing/img4.png"]
+CARPET_TEST = ["imgs/carpet/img1.png", "imgs/carpet/img2.png", "imgs/carpet/img3.png", "imgs/carpet/img4.png"]
 PICKLE_FILE = "svm_model.pkl"
 
-from os import listdir
 
 # get functions used for retrieving filenames
 def get_training_imgs():

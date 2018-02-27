@@ -48,7 +48,6 @@ def compare_neighbours(center, image, indexes):
 
     return res
 
-
 def get_subwindow_indexes(center):
     indexes = get_neighbours_indexes(clockwise=False)
     x, y = center
@@ -67,45 +66,11 @@ def get_neighbours_indexes(clockwise=True, scale=1):
 #     y, x = np.ogrid[-a:n - a, -b:n - b]
 #     mask = x * x + y * y <= r * roo
 #
-# res = start_3_by_3(imgs.TEST)
 
-# data = []
-# labels = []
-#
-# for img_path in consts.get_training_imgs():
-#     img_res = start_3_by_3(img_path)
-#
-#     label = img_path.split('/')[-2]
-#     labels.append(label)
-#
-#     (hist, _) = np.histogram(img_res, np.arange(0, 25))
-#     hist = hist / np.sum(hist)
-#     data.append(hist)
-#
-# model = LinearSVC(C=100.0)
-# model.fit(data, labels)
-#
-# consts.pickle_save(model)
+res = start_3_by_3(consts.TEST)
+res_array = np.asarray(res).reshape(-1)
 
-model = consts.pickle_load()
-
-
-for img_path in consts.get_testing_imgs():
-    img_res = start_3_by_3(img_path)
-
-    (hist, _) = np.histogram(img_res, np.arange(0, 25))
-    hist = hist / np.sum(hist)
-
-    hist = hist.reshape(1, -1)
-
-    prediction = model.predict(hist)
-    prediction = prediction[0]
-
-    img = cv2.imread(img_path)
-
-    # display the image and the prediction
-    cv2.putText(img, prediction, (10, 30), cv2.FONT_ITALIC,
-                1.0, (255, 0, 255), 3)
-
-    cv2.imshow("Image", img)
-    cv2.waitKey(0)
+import csv
+with open('shinigami.csv', 'w') as csvfile:
+    writer = csv.writer(csvfile)
+    writer.writerow(res_array)
